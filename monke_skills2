@@ -1,0 +1,154 @@
+/*----------------------------------------------------------------------------*/
+/*                                                                            */
+/*    Module:       main.cpp                                                  */
+/*    Author:       VEX                                                       */
+/*    Created:      Thu Sep 26 2019                                           */
+/*    Description:  Competition Template                                      */
+/*                                                                            */
+/*----------------------------------------------------------------------------*/
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Controller1          controller                    
+// FrontLeft            motor         1               
+// Hammer               motor         2               
+// RightLift            motor         3               
+// FrontRight           motor         10              
+// BackLeft             motor         11              
+// LeftLift             motor         12              
+// BackRight            motor         20              
+// ---- END VEXCODE CONFIGURED DEVICES ----
+#include "vex.h"
+using namespace vex;
+// A global instance of competition
+competition Competition;
+// define your global instances of motors and other devices here
+/*---------------------------------------------------------------------------*/
+/*                          Pre-Autonomous Functions                         */
+/*                                                                           */
+/*  You may want to perform some actions before the competition starts.      */
+/*  Do them in the following function.  You must return from this function   */
+/*  or the autonomous and usercontrol tasks will not be started.  This       */
+/*  function is only called once after the V5 has been powered on and        */
+/*  not every time that the robot is disabled.                               */
+/*---------------------------------------------------------------------------*/
+void pre_auton(void) {
+// Initializing Robot Configuration. DO NOT REMOVE!
+vexcodeInit();
+// All activities that occur before the competition starts
+// Example: clearing encoders, setting servo positions, ...
+}
+/*---------------------------------------------------------------------------*/
+/*                                                                           */
+/*                              Autonomous Task                              */
+/*                                                                           */
+/*  This task is used to control your robot during the autonomous phase of   */
+/*  a VEX Competition.                                                       */
+/*                                                                           */
+/*  You must modify the code to add your own robot specific commands here.   */
+/*---------------------------------------------------------------------------*/
+void autonomous(void) {
+//setting speed
+FrontRight.setVelocity(60,pct);// Front Right motor is spinning at 60 percent speed during autonomous
+BackRight.setVelocity(60,pct);//Back Right motor is spinning at 60 percent speed during autonomous
+FrontLeft.setVelocity(60,pct);//Front Left motor is spinning at 60 percent speed during autonomous
+BackLeft.setVelocity(60,pct);//Back Left motor is spinning at 60 percent speed during autonomous
+Hammer.setVelocity(50,pct);//Hammer motor is spinning at 50 percent speed during autonomous
+RightLift.setVelocity(100,pct);//Right Lift motor is spinning at 100 percent speed during autonomous
+LeftLift.setVelocity(100,pct);//Left Lift motor is spinning at 100 percent speed during autonomous
+//AUTONOMOUS STARTS 
+//Robot drives backwards for 2.5 revolutions
+BackRight.spinFor(directionType::rev,2.5,rev,false);//Back Right motor is spinning in reverse for 2.5 revolutions
+FrontLeft.spinFor(directionType::rev,2.5,rev,false);//Front Left motor is spinning in reverse for 2.5 revolutions
+BackLeft.spinFor(directionType::rev,2.5,rev,false);//Back Left motor is spinning in reverse for 2.5 revolutions
+FrontRight.spinFor(directionType::rev,2.5,rev,false);//Front Right motor is spinning in reverse for 2.5 revolutions
+wait(.75,seconds);//Robot is waiting .75 seconds to run the next command
+
+//Robot turns right for .15 revolutions
+BackRight.spinFor(directionType::rev,.15,rev,false);//Back Right motor is spinning in reverse for .15 revolutions
+FrontLeft.spinFor(directionType::fwd,.15,rev,false);//Front Left motor is spinning forward for .15 revolutions
+BackLeft.spinFor(directionType::fwd,.15,rev,false);//Back Left motor is spinning in forward for .15 revolutions
+FrontRight.spinFor(directionType::rev,.15,rev,false);//Front Right motor is spinning in reverse for .15 revolutions
+wait(.5,seconds);//Robot is waiting .5 seconds to run the next command
+
+//robot drives forward for 2.5 revolutions
+BackRight.spinFor(directionType::fwd,2.5,rev,false);//Back Right motor is spinning forward for 2.5 revolutions
+FrontLeft.spinFor(directionType::fwd,2.5,rev,false);//Front Left motor is spinning forward for 2.5 revolutions
+BackLeft.spinFor(directionType::fwd,2.5,rev,false);//Back Left motor is spinning forward for 2.5 revolutions
+FrontRight.spinFor(directionType::fwd,2.5,rev,true);//Front Right motor is spinning forward for 2.5 revolutions
+wait(.75,seconds);//Robot is waiting .75 seconds to run the next command
+}
+
+
+ 
+
+// Insert autonomous user code here.
+// ............................FrontRight.spinFor(directionType::rev,4,rev,false);// front right motor is spinning forward for 8.1 rotations
+
+/*---------------------------------------------------------------------------*/
+/*                                                                           */
+/*                              User Control Task                            */
+/*                                                                           */
+/*  This task is used to control your robot during the user control phase of */
+/*  a VEX Competition.                                                       */
+/*                                                                           */
+/*  You must modify the code to add your own robot specific commands here.   */
+/*---------------------------------------------------------------------------*/
+void usercontrol(void) {
+while (1) {
+
+BackLeft.spin(directionType::fwd,(Controller1.Axis3.value()+Controller1.Axis4.value()),velocityUnits::pct);//Back Left motor is spinning forward on axis 3 and 4
+BackRight.spin(directionType::fwd,(Controller1.Axis3.value()-Controller1.Axis4.value()),velocityUnits::pct);//Back Right motor is spinning forward on axis 3 and 4
+FrontLeft.spin(directionType::fwd,(Controller1.Axis3.value()+Controller1.Axis4.value()),velocityUnits::pct);//Front Left motor is spinning forward on axis 3 and 4
+FrontRight.spin(directionType::fwd,(Controller1.Axis3.value()-Controller1.Axis4.value()),velocityUnits::pct);//Front Left motor is spinning forward on axis 3 and 4
+//
+if (Controller1.ButtonR2.pressing()){
+Hammer.spin(directionType::fwd,25,velocityUnits::pct);//when button R2 is being pressed our hammer is moving forward at 25 velocity units
+}
+else if (Controller1.ButtonL2.pressing()){
+Hammer.spin(directionType::rev,25,velocityUnits::pct);//when button L2 is being pressed our hammer is moving in reverse at 25 velocity units
+}
+else{
+Hammer.stop(brakeType::hold);}//if neither button is being pressed, then the motor stops
+
+
+if (Controller1.ButtonA.pressing()){
+LeftLift.spin(directionType::fwd,25,velocityUnits::pct);//when button A is being pressed our left lift motor is moving forward at 25 velocity units
+RightLift.spin(directionType::fwd,25,velocityUnits::pct);//when button A is being pressed our right lift motor is moving forward at 25 velocity units
+}
+else if (Controller1.ButtonB.pressing()){
+LeftLift.spin(directionType::rev,25,velocityUnits::pct);//when button B is being pressed our left lift motor is moving in reverse at 25 velocity units
+RightLift.spin(directionType::rev,25,velocityUnits::pct);//when button B is being pressed our right lift motor is moving in reverse at 25 velocity units
+}
+else{
+LeftLift.stop(brakeType::hold);//if neither button is being pressed, then the left lift motor stops
+RightLift.stop(brakeType::hold);////if neither button is being pressed, then the right lift motor stops
+}
+// User control code here, inside the loo
+// This is the main execution loop for the user control program.
+// Each time through the loop your program should update motor + servo
+// values based on feedback from the joysticks.
+// ........................................................................
+// Insert user code here. This is where you use the joystick values to
+// update your motors, etc.
+// ........................................................................
+wait(20, msec); // Sleep the task for a short amount of time to
+          // prevent wasted resources.
+}
+}
+//
+// Main will set up the competition functions and callbacks.
+//
+int main() {
+// Prevent main from exiting with an infinite loop.
+// Prevent main from exiting with an infinite loop.
+// Set up callbacks for autonomous and driver control periods.
+Competition.autonomous(autonomous);
+Competition.drivercontrol(usercontrol);
+// Run the pre-autonomous function.
+pre_auton();
+while (true) {
+wait(100, msec);
+}
+}
+ 
